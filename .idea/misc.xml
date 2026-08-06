@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="sdkName" value="uv (LunarPlayer)" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="uv (LunarPlayer)" project-jdk-type="Python SDK" />
+  <component name="ProjectUserFactors">
+    <factor id="completionFinishedType">
+      <dailyData date="25-04-2025">
+        <observation name="cancelled" value="2.0" />
+      </dailyData>
+    </factor>
+    <factor id="completionUsage">
+      <dailyData date="25-04-2025">
+        <observation name="count" value="2.0" />
+      </dailyData>
+    </factor>
+  </component>
+</project>
