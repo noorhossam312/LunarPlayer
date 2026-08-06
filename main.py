@@ -107,7 +107,7 @@ choice = song_ask(titles)
 
 for result in results:
     if result["title"] == choice:
-        link = f"https://www.youtube.com/{result['url_suffix']}"
+        link = f"https://www.youtube.com{result['url_suffix']}"
 
 """Downloading"""
 filename = f"songs/{choice}.ogg"
