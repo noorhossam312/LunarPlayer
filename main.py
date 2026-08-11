@@ -3,6 +3,7 @@ import sys
 import os
 import time
 import threading
+import json
 import ffmpeg
 import yt_dlp
 import pygame
@@ -10,16 +11,19 @@ import readchar
 import questionary
 from rich.console import Console
 from youtube_search import YoutubeSearch
+from installer import install_all
 
 console = Console()
 
 """Checks"""
-if getattr(sys, 'frozen', False):  # This check is to check if the user is running the program through the source or the binary which will be compiled soon.
+if getattr(sys, 'frozen', False):  # This check is to check if the user is running the program through the source or the binary.
     binary = True
 else:
     binary = False
 
-if sys.platform == "darwin":
+platform = sys.platform
+
+if platform == "darwin":
     console.input(
         f"[red]{'!!!FATAL ERROR!!!'.center(console.width)}[/red]\n"
         f"{'This program does not have support for MacOS. The program will terminate.'.center(console.width)}\n"
@@ -27,15 +31,18 @@ if sys.platform == "darwin":
     )
     sys.exit(1)
 
-platform = sys.platform
 
-if platform == "linux":
-    ffmpeg_path = "tools/linux/ffmpeg/bin/ffmpeg" if not binary else "../../../tools/linux/ffmpeg/bin/ffmpeg"
-    deno_path = "tools/linux/deno/deno" if not binary else "../../../tools/linux/deno/deno"
 
-if platform == "win32":
-    ffmpeg_path = "tools/win32/ffmpeg/bin/ffmpeg.exe" if not binary else "../../../tools/win32/ffmpeg/bin/ffmpeg.exe"
-    deno_path = "tools/win32/deno/deno.exe" if not binary else "../../../tools/win32/deno/deno.exe"
+browser_exists = False
+
+with open("yt-dlp-presets/cookiesfrombrowser.json", "r") as f:
+    loaded_json = json.load(f)
+    if "browser" in loaded_json:
+        if loaded_json["cookiesfrombrowser"] != "":
+            browser_exists = True
+
+"""Important calls"""
+install_all.add_tool_files_to_path()
 
 """Version info"""
 mode = "binary" if binary else "source"
@@ -44,7 +51,7 @@ print(f"LunarPlayer 0.1-alpha.1 {platform} ({mode})")
 """Functions"""
 def song_ask(titles):
     choice = questionary.select(
-        "Loaded 10 most relevant results, pick the one you want to play.",
+        "Loaded the 10 most relevant results, pick the result you want to play.",
         choices=titles,
     ).ask()
 
@@ -53,8 +60,6 @@ def song_ask(titles):
                             f"> ").lower()
         if making_sure == "y":
             pass
-            # download song
-            # play song
         elif making_sure == "n":
             song_ask(titles)
         else:
@@ -108,6 +113,7 @@ choice = song_ask(titles)
 for result in results:
     if result["title"] == choice:
         link = f"https://www.youtube.com{result['url_suffix']}"
+        input(result['url_suffix'])
 
 """Downloading"""
 filename = f"songs/{choice}.ogg"
@@ -116,23 +122,38 @@ if os.path.exists(filename):
     play_song(filename)
 else:
     print("Fetching audio stream...")
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "quiet": True,
-        "noplaylist": True,
-        "js_runtimes": {
-            "deno": {
-                "path": deno_path
-            }
-        }
-    }
+    with open("yt-dlp-presets/cookiesfrombrowser.json", "r") as f:
+        config = json.load(f)
+        if "cookiesfrombrowser" in config and not browser_exists:
+            console.print(
+                f"[yellow]{'WARNING'.center(console.width)}[/yellow]"
+                f"You are using the cookiesfrombrowser approach. This will let yt-dlp use your already authenticated cookies, which could lead to YouTube detecting automated activity, restricting or invalidating your session. Use this only when necessary.".center(console.width)
+            )
+            get_browser = questionary.select(
+                "LunarPlayer has recognized cookiesfrombrowser in the JSON config file. Please pick the browser you are logged into YouTube with.",
+                choices=["Brave",
+                         "Chrome",
+                         "Chromium",
+                         "Edge",
+                         "Firefox",
+                         "Opera",
+                         "Safari",
+                         "Vivaldi",
+                         "Whale",
+                ],
+            ).ask().lower()
+            config["cookiesfrombrowser"] = (get_browser,)
+            with open("yt-dlp-presets/cookiesfrombrowser.json", "w") as f:
+                json.dump(config, f, indent=4)
+
+    ydl_opts = config
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(link, download=False)
         stream = info["url"]
 
     print("Converting audio stream to ogg using ffmpeg...")
-    ffmpeg.input(stream).output(filename, format="ogg", acodec="libvorbis", audio_bitrate="320k", loglevel="error").run(cmd=rf"{ffmpeg_path}")
+    ffmpeg.input(stream).output(filename, format="ogg", acodec="libvorbis", audio_bitrate="320k", loglevel="error").run()
 
     print("Downloaded, playing...")
 
