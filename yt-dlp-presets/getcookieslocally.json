@@ -1,0 +1,6 @@
+{
+  "format": "bestaudio/best",
+  "quiet": true,
+  "noplaylist": true,
+  "cookiefile": "cookies.txt"
+}
