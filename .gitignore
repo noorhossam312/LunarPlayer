@@ -1,5 +1,8 @@
 uv.lock
 pyproject.toml
 build.txt
-installer/deno/*
 installer/ffmpeg/*
+songs/*
+!songs/.gitkeep
+cli_to_api.py
+**/__pycache__/
