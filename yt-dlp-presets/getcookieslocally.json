@@ -2,5 +2,13 @@
   "format": "bestaudio/best",
   "quiet": true,
   "noplaylist": true,
-  "cookiefile": "cookies.txt"
+  "cookiefile": "cookies.txt",
+  "js_runtimes": {
+    "deno": {
+      "path": null
+    },
+    "quickjs": {
+
+    }
+  }
 }

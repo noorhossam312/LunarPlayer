@@ -1,6 +1,14 @@
 {
-    "format": "bestaudio/best",
-    "quiet": true,
-    "noplaylist": true,
-    "cookiesfrombrowser": ""
+  "format": "bestaudio/best",
+  "quiet": true,
+  "noplaylist": true,
+  "cookiesfrombrowser": "",
+  "js_runtimes": {
+    "deno": {
+      "path": null
+    },
+    "quickjs": {
+
+    }
+  }
 }
