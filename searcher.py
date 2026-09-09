@@ -5,11 +5,22 @@ import nice_errors
 
 
 class Searcher:
-    def __init__(self):
-        pass
+    """Searches YouTube for relevant results.
+
+    This function searches YouTube using YoutubeSearch.
+    """
 
     @staticmethod
-    def search_and_ask(search_term):
+    def search_and_ask(search_term) -> None:
+        """Search YouTube for a search term.
+
+        Args:
+            search_term: Search term.
+
+        Returns:
+            link: YouTube URL.
+            choice: YouTube video name.
+        """
         results = YoutubeSearch(search_term, max_results=10).to_dict()
         titles = []
         for result in results:

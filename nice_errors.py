@@ -8,6 +8,14 @@ from rich.panel import Panel
 console = Console()
 
 def print_error(severity: Literal["warn", "ferror"], error: str) -> None:
+    """Prints a pretty error message.
+
+    This function prints a pretty error message to the console, returning nothing.
+
+    Args:
+        severity: How severe the error is (ferror: fatal error, warn: warning)
+        error: The error message to print.
+    """
     if severity == "warn":
         panel = Panel(
             error,

@@ -19,12 +19,12 @@ def main_menu(calling_from_player=False):
         if choice == "s":
             s = searcher.Searcher()
             link, title = s.search_and_ask(input("Search term\n> "))
-            if os.path.exists(downloader.Downloader(add_to_path=False).sanitize_filename(title)):
+            if os.path.exists(downloader.sanitize_filename(title)):
                 p = player.Player()
-                p.play(downloader.Downloader(add_to_path=False).sanitize_filename(title), title)
+                p.play(downloader.sanitize_filename(title), title)
             else:
-                d = downloader.Downloader()
-                filename = d.download(link, title, config)
+
+                filename = downloader.Downloader.download(link, title, config)
                 p = player.Player()
                 p.play(filename, title)
         elif choice == "v":
