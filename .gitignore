@@ -7,3 +7,6 @@ cli_to_api.py
 **/__pycache__/
 *.pyc
 .idea/
+python312/
+main.build/
+main.dist
