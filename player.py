@@ -4,6 +4,7 @@ import threading
 import time
 
 import mpv
+import questionary
 import readchar
 from rich.console import Console
 from rich.live import Live
@@ -42,15 +43,15 @@ class Player:
                 live.update(f"{song_name}\n"
                 f"{player_pos}/{song_dur}\n"
                 f"{int(self.player.volume)}% volume, Looping is {'on' if self.player.loop_file == 'inf' else 'off'}\n"
-                f"{p}"
                 )
 
-        menu_or_quit = questionary.select(
-            "Song is over. What to do?",
-            choices=["Exit to main menu", "Quit"],
-        )
-        if menu_or_quit.lower()[0] == "q":
-            self.quit()
+        if not self.stop:
+            menu_or_quit = questionary.select(
+                "Song is over. What to do?",
+                choices=["Exit to main menu", "Quit"],
+            )
+            if menu_or_quit.lower()[0] == "q":
+                self.quit()
 
     def listen_for_actions(self):
         """Listens for keybinds.
@@ -104,7 +105,7 @@ class Player:
 
     def close(self):
         self.stop = True
-        self.player.terminate()
+        self.player.stop()
 
     def toggle_loop(self):
         if self.player.loop_file == "inf":

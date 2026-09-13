@@ -26,7 +26,6 @@ class StatisticsReader:
         Returns:
             result: String representation of stats.json.
         """
-
         with open(self.file_path, "r") as f:
             stats = json.load(f)
             stats = stats["song_plays"]

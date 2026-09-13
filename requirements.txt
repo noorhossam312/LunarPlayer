@@ -3,5 +3,5 @@ questionary==2.1.1
 readchar==4.2.2
 rich==15.0.0
 youtube_search==2.2.0
-yt_dlp
-pyinstaller
+pytubefix
+python-mpv

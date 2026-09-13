@@ -9,7 +9,6 @@ class Searcher:
 
     This function searches YouTube using YoutubeSearch.
     """
-
     @staticmethod
     def search_and_ask(search_term) -> None:
         """Search YouTube for a search term.
